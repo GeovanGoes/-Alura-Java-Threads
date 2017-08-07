@@ -11,7 +11,7 @@ public class Principal
 		convidado2(banheiro);
 		convidado1(banheiro);
 		convidado4(banheiro);
-		convidado3(banheiro);
+		limpeza(banheiro);
 	}
 	
 	
@@ -20,7 +20,7 @@ public class Principal
 		new Thread(() -> 
 		{			
 			banheiro.numero1();
-		}, "João").start();
+		}, "JoÃ£o").start();
 	}
 	
 	public static void convidado2(Banheiro banheiro)
@@ -31,12 +31,24 @@ public class Principal
 		}, "Pedro").start();
 	}
 	
-	public static void convidado3(Banheiro banheiro)
+	public static void limpeza(Banheiro banheiro)
 	{
-		new Thread(() -> 
-		{			
-			banheiro.numero2();
-		}, "Ana").start();
+		Thread limpe = new Thread(() -> 
+		{
+			while(true)
+			{
+				banheiro.limpa();
+				try {
+					Thread.sleep(20000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}, "Tia da Limpeza");
+		limpe.setDaemon(true);
+		limpe.setPriority(Thread.MAX_PRIORITY);
+		limpe.start();
 	}
 	
 	public static void convidado4(Banheiro banheiro)

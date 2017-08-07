@@ -2,25 +2,48 @@ package festaBanheiro;
 
 public class Banheiro {
 	
+	private boolean ehSujo = true;
+	
 	public void numero1()
 	{	
 		String name = Thread.currentThread().getName();
 		
-		System.out.println(name + " Est· batendo na porta...");
+		System.out.println(name + " Est√° batendo na porta...");
 		
 		synchronized (this) 
 		{
 			System.out.println(name+" Entrou agora...");
-			System.out.println(name+" T· mijando");
-			try 
+			
+			while(ehSujo)
 			{
-				Thread.sleep(5000);
-			} 
-			catch (InterruptedException e) 
-			{
-				e.printStackTrace();
+				esperaLaFora(name);
 			}
-			System.out.println(name+" T· saindo");			
+			
+			System.out.println(name+" T√¥ mijando");
+			dormeUmPouco(5000);
+			this.ehSujo = true;
+			System.out.println(name+" T√¥ saindo");			
+		}
+	}
+
+	private void dormeUmPouco(long millis) {
+		try 
+		{
+			Thread.sleep(millis);
+		} 
+		catch (InterruptedException e) 
+		{
+			e.printStackTrace();
+		}
+	}
+
+	private void esperaLaFora(String name) {
+		System.out.println(name + " eca, banheiro ta sujo!");
+		try {
+			this.wait();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
@@ -28,21 +51,48 @@ public class Banheiro {
 	{
 		String name = Thread.currentThread().getName();
 		
-		System.out.println(name + " Est· batendo na porta...");
+		System.out.println(name + " Est√° batendo na porta...");
 		
 		synchronized (this) 
 		{			
 			System.out.println(name+" Entrou agora...");
-			System.out.println(name+" T· cagando");
-			try 
+			
+			while(ehSujo)
 			{
-				Thread.sleep(10000);
-			} 
-			catch (InterruptedException e) 
-			{
-				e.printStackTrace();
+				esperaLaFora(name);
 			}
-			System.out.println(name+" T· saindo");			
+			
+			System.out.println(name+" T√¥ cagando");
+			dormeUmPouco(10000);
+			this.ehSujo = true;
+			System.out.println(name+" T√¥ saindo");			
+		}
+	}
+	
+	public void limpa()
+	{
+		String name = Thread.currentThread().getName();
+		
+		System.out.println(name + " Est√° batendo na porta...");
+		
+		synchronized (this) 
+		{
+			System.out.println(name+" Entrou agora...");
+			
+			if(ehSujo)
+			{
+				System.out.println("Limpando o banheiro");
+				this.ehSujo = false;
+				dormeUmPouco(13000);			
+			}
+			else
+			{
+				System.out.println(name + " n√£o est√° sujo!");
+			}
+			
+			this.notifyAll();
+			
+			System.out.println(name+" T√¥ saindo");			
 		}
 	}
 }
